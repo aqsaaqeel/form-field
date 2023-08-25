@@ -52,6 +52,9 @@ const PreviewCard: React.FC<{
   formData?: IRequisitionDetails;
 }> = ({ requisitionDetails, jobDetails, interviewSettings, formData }) => {
   const [localRequisitionDetails, setLocalRequisitionDetails] = useState<IRequisitionDetails | undefined>(requisitionDetails);
+  const [localJobDetails, setLocalJobDetails] = useState<IJobDetails | undefined>(jobDetails);
+  const [localInterviewDetails, setLocalInterviewDetails] = useState<IInterViewSettings | undefined>(interviewSettings);
+  
   const currentState = useData();
   console.log("from preview card", currentState);
   useEffect(() => {
@@ -59,6 +62,9 @@ const PreviewCard: React.FC<{
     console.log("check if changes")
     if (currentState) {
       setLocalRequisitionDetails(currentState.state.requisitionDetails);
+      setLocalJobDetails(currentState.state.jobDetails);
+      setLocalInterviewDetails(currentState.state.interviewSettings);
+    
     }
   }, [currentState]);
   return (
@@ -124,16 +130,16 @@ const PreviewCard: React.FC<{
             />
           </DataCard>
           <DataCard title="Job Detail">
-            <KeyValue title="Job Title" value={jobDetails?.jobTitle} />
-            <KeyValue title="Job Details" value={jobDetails?.jobDetails} />
-            <KeyValue title="Job Location" value={jobDetails?.jobLocation} />
+            <KeyValue title="Job Title" value={localJobDetails?.jobTitle} />
+            <KeyValue title="Job Details" value={localJobDetails?.jobDetails} />
+            <KeyValue title="Job Location" value={localJobDetails?.jobLocation} />
           </DataCard>
           <DataCard title="Interview Settings">
             <KeyValue
               title="Interview Duration"
               value={
                 interviewDurationOptions.find(
-                  (item) => item?.value === interviewSettings?.interviewDuration
+                  (item) => item?.value === localInterviewDetails?.interviewDuration
                 )?.label
               }
             />
@@ -141,7 +147,7 @@ const PreviewCard: React.FC<{
               title="Interview Language"
               value={
                 interviewLanguageOptions.find(
-                  (item) => item?.value === interviewSettings?.interviewLanguage
+                  (item) => item?.value === localInterviewDetails?.interviewLanguage
                 )?.label
               }
             />
@@ -149,7 +155,7 @@ const PreviewCard: React.FC<{
               title="Interview Mode"
               value={
                 interviewModeOptions.find(
-                  (item) => item?.value === interviewSettings?.interviewMode
+                  (item) => item?.value === localInterviewDetails?.interviewMode
                 )?.label
               }
             />
