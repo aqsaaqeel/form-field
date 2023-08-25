@@ -1,5 +1,5 @@
 import { Button, Flex, Box } from "@chakra-ui/react";
-import React from "react";
+import React, {useState} from "react";
 import FormInput from "../../components/formComponents/FormInput";
 import FormSelect from "../../components/formComponents/FormSelect";
 import { useFormik } from "formik";
@@ -7,10 +7,51 @@ import * as Yup from "yup";
 import { PageNumbers } from "../../interface/home";
 import { IRequisitionDetails } from "../../interface/forms";
 import { genderOptions, urgencyOptions } from "./constants";
-
+import { useData } from "./DataProvider";
 const RequisitionDetailsForm: React.FC<{
   handleTab: (n: PageNumbers) => void;
 }> = ({ handleTab }) => {
+
+  const currentState = useData();
+  console.log(currentState?.state.requisitionDetails);
+  const [formData, setFormData] = useState<IRequisitionDetails>({
+    requisitionTitle: "",
+    noOfOpenings: 0,
+    urgency: "",
+    gender: "",
+  });
+
+const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+  currentState?.setState((prevState) => ({
+    ...prevState,
+    requisitionDetails: {
+      ...prevState.requisitionDetails,
+      [name]: value,
+    },
+  }));
+};
+
+const handleSelectChange = (name: string, value: string) => {
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: value,
+  }));
+
+  currentState?.setState((prevState) => ({
+    ...prevState,
+    requisitionDetails: {
+      ...prevState.requisitionDetails,
+      [name]: value,
+    },
+  }));
+};
+
+
   const {
     handleChange,
     errors,
@@ -39,7 +80,10 @@ const RequisitionDetailsForm: React.FC<{
       gender: Yup.string().required("Gender is required"),
     }),
     onSubmit: (values) => {
-      handleTab(1);
+      currentState?.setState((prevState) => ({
+        ...prevState,
+        requisitionDetails: values,
+      }));
     },
   });
 
@@ -50,7 +94,10 @@ const RequisitionDetailsForm: React.FC<{
           label="Requisition Title"
           placeholder="Enter requisition title"
           name="requisitionTitle"
-          onChange={handleChange}
+          onChange={(e) => {
+            handleInputChange(e);
+            handleChange(e); 
+          }}
           onBlur={handleBlur}
           value={values?.requisitionTitle}
           error={errors?.requisitionTitle}
@@ -60,7 +107,10 @@ const RequisitionDetailsForm: React.FC<{
           label="Number of openings"
           placeholder="Enter number of openings"
           name="noOfOpenings"
-          onChange={handleChange}
+          onChange={(e) => {
+            handleInputChange(e);
+            handleChange(e); 
+          }}
           onBlur={handleBlur}
           value={values?.noOfOpenings}
           error={errors?.noOfOpenings}

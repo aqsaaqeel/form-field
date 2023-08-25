@@ -1,5 +1,5 @@
 import { Box, Flex, Text, Grid } from "@chakra-ui/react";
-import React from "react";
+import React,{useState, useEffect} from "react";
 import {
   IInterViewSettings,
   IJobDetails,
@@ -12,7 +12,7 @@ import {
   interviewModeOptions,
   urgencyOptions,
 } from "./constants";
-
+import { useData } from "./DataProvider";
 const DataCard: React.FC<{ title: string; children: React.ReactNode }> = ({
   title,
   children,
@@ -49,7 +49,18 @@ const PreviewCard: React.FC<{
   requisitionDetails?: IRequisitionDetails;
   jobDetails?: IJobDetails;
   interviewSettings?: IInterViewSettings;
-}> = ({ requisitionDetails, jobDetails, interviewSettings }) => {
+  formData?: IRequisitionDetails;
+}> = ({ requisitionDetails, jobDetails, interviewSettings, formData }) => {
+  const [localRequisitionDetails, setLocalRequisitionDetails] = useState<IRequisitionDetails | undefined>(requisitionDetails);
+  const currentState = useData();
+  console.log("from preview card", currentState);
+  useEffect(() => {
+    // Update local state when context state changes
+    console.log("check if changes")
+    if (currentState) {
+      setLocalRequisitionDetails(currentState.state.requisitionDetails);
+    }
+  }, [currentState]);
   return (
     <Box p="1rem">
       <Box borderRadius="10px" bgColor="gray.100" height="fit-content">
@@ -80,14 +91,14 @@ const PreviewCard: React.FC<{
               alignItems="center"
             >
               <Text fontSize="0.9rem" fontWeight="500">
-                {requisitionDetails?.requisitionTitle}
+                {localRequisitionDetails?.requisitionTitle}
               </Text>
               <Flex justifyContent="space-around" alignItems="center">
                 <Text fontSize="0.8rem" mr="0.4rem" fontWeight="200" as="p">
                   OPENINGS
                 </Text>
                 <Text fontSize="1rem" fontWeight="bold" as="span">
-                  {requisitionDetails?.noOfOpenings}
+                  {localRequisitionDetails?.noOfOpenings}
                 </Text>
               </Flex>
             </Flex>
@@ -99,7 +110,7 @@ const PreviewCard: React.FC<{
               title="Urgency"
               value={
                 urgencyOptions.find(
-                  (item) => item?.value === requisitionDetails?.urgency
+                  (item) => item?.value === localRequisitionDetails?.urgency
                 )?.label
               }
             />
@@ -107,7 +118,7 @@ const PreviewCard: React.FC<{
               title="Gender"
               value={
                 genderOptions.find(
-                  (item) => item?.value === requisitionDetails?.gender
+                  (item) => item?.value === localRequisitionDetails?.gender
                 )?.label
               }
             />

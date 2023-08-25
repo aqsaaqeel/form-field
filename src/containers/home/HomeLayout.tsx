@@ -42,7 +42,7 @@ const HomeLayout = () => {
           <TabList>
             <CustomTab>Requistion Details</CustomTab>
             <CustomTab>Job Details</CustomTab>
-            <CustomTab>Interview Settings</CustomTab>
+            <CustomTab>Interview  Settings</CustomTab>
           </TabList>
           <Grid display="grid" gridTemplateColumns="3fr 2fr" gap="24px">
             <TabPanels>
