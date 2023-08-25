@@ -13,7 +13,7 @@ const RequisitionDetailsForm: React.FC<{
 }> = ({ handleTab }) => {
 
   const currentState = useData();
-  console.log(currentState?.state.requisitionDetails);
+  // console.log(currentState?.state.requisitionDetails);
   const [formData, setFormData] = useState<IRequisitionDetails>({
     requisitionTitle: "",
     noOfOpenings: 0,
@@ -80,6 +80,7 @@ const handleSelectChange = (name: string, value: string) => {
       gender: Yup.string().required("Gender is required"),
     }),
     onSubmit: (values) => {
+      handleTab(1);
       currentState?.setState((prevState) => ({
         ...prevState,
         requisitionDetails: values,

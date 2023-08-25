@@ -12,15 +12,15 @@ export const interviewLanguageOptions = [
 export const interviewDurationOptions = [
   {
     label: "Short",
-    value: "short",
+    value: "1",
   },
   {
     label: "Medium",
-    value: "medium",
+    value: "2",
   },
   {
     label: "Long",
-    value: "long",
+    value: "3",
   },
 ];
 
